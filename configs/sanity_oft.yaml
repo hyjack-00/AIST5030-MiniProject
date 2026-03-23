@@ -1,0 +1,60 @@
+experiment_name: sanity-oft
+output_root: outputs
+seed: 42
+device: auto
+
+dataset:
+  source: local_debug
+  data_dir: data/local_debug
+  text_column: text
+  label_column: label
+  label_names:
+    - World
+    - Sports
+    - Business
+    - Sci/Tech
+  max_train_samples: 12
+  max_eval_samples: 4
+  max_predict_samples: 4
+
+model:
+  architecture: distilbert
+  use_pretrained: false
+  model_name_or_path: null
+  tokenizer_name_or_path: assets/offline_bert_tokenizer
+  local_files_only: true
+  max_length: 48
+  offline_config:
+    vocab_size: 128
+    dim: 96
+    hidden_dim: 192
+    n_layers: 2
+    n_heads: 4
+    dropout: 0.1
+    attention_dropout: 0.1
+
+training:
+  finetuning_mode: oft
+  epochs: 1
+  batch_size: 4
+  eval_batch_size: 4
+  learning_rate: 0.001
+  weight_decay: 0.01
+  warmup_ratio: 0.0
+  gradient_accumulation_steps: 1
+  gradient_clip_norm: 1.0
+  log_every_steps: 1
+  num_workers: 0
+
+oft:
+  r: null
+  oft_block_size: 16
+  target_modules:
+    - q_lin
+    - k_lin
+    - v_lin
+    - out_lin
+  modules_to_save:
+    - pre_classifier
+    - classifier
+  bias: none
