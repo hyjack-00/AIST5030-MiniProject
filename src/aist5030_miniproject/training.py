@@ -16,6 +16,7 @@ from .evaluation import evaluate_split
 from .io_utils import save_markdown, save_predictions_csv
 from .modeling import (
     apply_finetuning_strategy,
+    align_model_and_tokenizer,
     build_base_model,
     count_parameters,
     filter_batch_for_model,
@@ -175,6 +176,7 @@ def run_training(config_path: str | Path) -> Path:
     collator = build_data_collator(tokenizer)
 
     model = build_base_model(config, project_root)
+    align_model_and_tokenizer(model, tokenizer)
     model, extra_metadata = apply_finetuning_strategy(model, config)
     model.to(device)
 

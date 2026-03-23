@@ -53,6 +53,26 @@ OFT:
 python train.py --config configs/ag_news_oft.yaml
 ```
 
+If you want a larger backbone, use the BERT-base configs instead:
+
+```bash
+python train.py --config configs/ag_news_bert_base_full_ft.yaml
+python train.py --config configs/ag_news_bert_base_oft.yaml
+```
+
+If you want to use a local Qwen model, place the model directory here first:
+
+```bash
+local_models/Qwen2.5-0.5B-Instruct
+```
+
+Then run:
+
+```bash
+python train.py --config configs/ag_news_qwen25_05b_full_ft_local.yaml
+python train.py --config configs/ag_news_qwen25_05b_oft_local.yaml
+```
+
 ## 3. Evaluate Saved Runs
 
 Each training run writes a new folder under `outputs/`.
@@ -104,3 +124,18 @@ The simplest knobs to change are:
 - `dataset.max_eval_samples`
 
 Edit the YAML config directly and keep the original files unchanged by copying them first.
+
+## 8. Recommended Bigger Model
+
+If you want a larger model than DistilBERT without making the run too risky, use:
+
+- `bert-base-uncased`
+
+Why this one:
+
+- clearly larger than `distilbert-base-uncased`
+- already supported by the current OFT target-module mapping
+- safer than jumping straight to much larger models before the first successful run
+
+If you specifically want Qwen, the project now includes local-model configs for `Qwen2.5-0.5B-Instruct`.
+Those configs assume the downloaded model is already present on disk and do not access the Hugging Face Hub at runtime.

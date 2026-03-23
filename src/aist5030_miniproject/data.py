@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from datasets import Dataset, DatasetDict, load_dataset
+from datasets import Dataset, DatasetDict, load_dataset, load_from_disk
 from transformers import DataCollatorWithPadding
 
 
@@ -34,6 +34,15 @@ def load_raw_datasets(config: dict[str, Any], project_root: Path) -> DatasetDict
         return DatasetDict(
             train=_truncate_split(dataset["train"], dataset_cfg.get("max_train_samples")),
             validation=_truncate_split(dataset["test"], dataset_cfg.get("max_eval_samples")),
+            test=_truncate_split(dataset["test"], dataset_cfg.get("max_eval_samples")),
+        )
+
+    if source == "hf_disk":
+        disk_path = (project_root / dataset_cfg["disk_path"]).resolve()
+        dataset = load_from_disk(str(disk_path))
+        return DatasetDict(
+            train=_truncate_split(dataset["train"], dataset_cfg.get("max_train_samples")),
+            validation=_truncate_split(dataset.get("validation", dataset["test"]), dataset_cfg.get("max_eval_samples")),
             test=_truncate_split(dataset["test"], dataset_cfg.get("max_eval_samples")),
         )
 

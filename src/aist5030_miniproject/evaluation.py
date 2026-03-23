@@ -11,7 +11,14 @@ from .config import load_config, save_yaml
 from .data import build_data_collator, load_raw_datasets, tokenize_datasets
 from .io_utils import save_markdown, save_predictions_csv
 from .metrics import accuracy_score, macro_f1_score
-from .modeling import apply_finetuning_strategy, build_base_model, filter_batch_for_model, load_tokenizer, move_batch_to_device
+from .modeling import (
+    align_model_and_tokenizer,
+    apply_finetuning_strategy,
+    build_base_model,
+    filter_batch_for_model,
+    load_tokenizer,
+    move_batch_to_device,
+)
 from .utils import choose_device, save_json
 
 
@@ -69,6 +76,7 @@ def load_model_from_run(checkpoint_dir: Path):
     tokenizer = load_tokenizer(config, project_root)
 
     model = build_base_model(config, project_root)
+    align_model_and_tokenizer(model, tokenizer)
     model, _ = apply_finetuning_strategy(model, config)
 
     state_dict = torch.load(checkpoint_dir / "model" / "state_dict.pt", map_location="cpu")
@@ -96,6 +104,7 @@ def run_evaluation(checkpoint_dir: str | Path, config_override: str | None = Non
     collator = build_data_collator(tokenizer)
 
     model = build_base_model(config, project_root)
+    align_model_and_tokenizer(model, tokenizer)
     model, _ = apply_finetuning_strategy(model, config)
     state_dict = torch.load(checkpoint_path / "model" / "state_dict.pt", map_location="cpu")
     model.load_state_dict(state_dict, strict=False)

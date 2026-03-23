@@ -3,7 +3,7 @@ __pycache__/
 .mypy_cache/
 .DS_Store
 outputs/
+local_models/
 *.pyc
 *.pyo
 *.pyd
-

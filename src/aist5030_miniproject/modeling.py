@@ -12,6 +12,7 @@ DEFAULT_OFT_TARGETS = {
     "distilbert": ["q_lin", "k_lin", "v_lin", "out_lin"],
     "bert": ["query", "key", "value", "dense"],
     "roberta": ["query", "key", "value", "dense"],
+    "qwen2": ["q_proj", "k_proj", "v_proj", "o_proj"],
 }
 
 
@@ -29,14 +30,20 @@ def load_tokenizer(config: dict[str, Any], project_root: Path):
         raise ValueError("A tokenizer path or model name is required.")
 
     if model_cfg["use_pretrained"]:
-        return AutoTokenizer.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(
             tokenizer_name,
             local_files_only=model_cfg.get("local_files_only", False),
             use_fast=True,
         )
+        if tokenizer.pad_token is None and tokenizer.eos_token is not None:
+            tokenizer.pad_token = tokenizer.eos_token
+        return tokenizer
 
     tokenizer_path = (project_root / tokenizer_name).resolve()
-    return BertTokenizerFast.from_pretrained(str(tokenizer_path), local_files_only=True, do_lower_case=True)
+    tokenizer = BertTokenizerFast.from_pretrained(str(tokenizer_path), local_files_only=True, do_lower_case=True)
+    if tokenizer.pad_token is None and tokenizer.eos_token is not None:
+        tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer
 
 
 def build_base_model(config: dict[str, Any], project_root: Path):
@@ -79,6 +86,11 @@ def build_base_model(config: dict[str, Any], project_root: Path):
         label2id=label2id,
     )
     return AutoModelForSequenceClassification.from_config(hf_config)
+
+
+def align_model_and_tokenizer(model, tokenizer) -> None:
+    if getattr(tokenizer, "pad_token_id", None) is not None:
+        model.config.pad_token_id = tokenizer.pad_token_id
 
 
 def resolve_oft_target_modules(config: dict[str, Any]) -> list[str]:

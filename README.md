@@ -67,6 +67,13 @@ python train.py --config configs/ag_news_full_ft.yaml
 python train.py --config configs/ag_news_oft.yaml
 ```
 
+If you have already downloaded AG News into `data/ag_news_hf`, use the local-data configs:
+
+```bash
+python train.py --config configs/ag_news_local_full_ft.yaml
+python train.py --config configs/ag_news_local_oft.yaml
+```
+
 These configs assume the following defaults:
 
 - Dataset: `ag_news`
@@ -80,6 +87,22 @@ Important:
 - Use `CUDA_VISIBLE_DEVICES=<gpu_id>` to choose the GPU.
 
 See `docs/cuda_run_guide.md` for the exact CUDA workflow.
+
+If you want a larger ready-made option, use:
+
+- `configs/ag_news_bert_base_full_ft.yaml`
+- `configs/ag_news_bert_base_oft.yaml`
+
+If you want to use a local Qwen model, use:
+
+- `configs/ag_news_qwen25_05b_full_ft_local.yaml`
+- `configs/ag_news_qwen25_05b_oft_local.yaml`
+
+These configs expect the model files to exist under:
+
+```bash
+local_models/Qwen2.5-0.5B-Instruct
+```
 
 ## Saved Artifacts
 
