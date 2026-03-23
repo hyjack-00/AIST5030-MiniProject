@@ -1,4 +1,4 @@
-experiment_name: ag-news-oft
+experiment_name: ag-news-distilbert-oft
 output_root: outputs
 seed: 42
 device: auto

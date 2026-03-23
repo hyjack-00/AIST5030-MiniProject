@@ -1,4 +1,4 @@
-experiment_name: ag-news-local-full-ft
+experiment_name: ag-news-distilbert-data-full-ft
 output_root: outputs
 seed: 42
 device: auto
@@ -20,8 +20,8 @@ dataset:
 model:
   architecture: distilbert
   use_pretrained: true
-  model_name_or_path: distilbert-base-uncased
-  tokenizer_name_or_path: distilbert-base-uncased
+  model_name_or_path: /ssd3/models/distilbert-base-uncased
+  tokenizer_name_or_path: /ssd3/models/distilbert-base-uncased
   local_files_only: false
   max_length: 128
 
