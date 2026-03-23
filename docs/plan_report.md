@@ -82,6 +82,8 @@ This is useful for validating the training and evaluation pipeline, but it is no
 
 - Run `configs/ag_news_full_ft.yaml`.
 - Run `configs/ag_news_oft.yaml`.
+- Use one selected GPU with `CUDA_VISIBLE_DEVICES=<gpu_id>`.
+- Follow `docs/cuda_run_guide.md` for the exact commands.
 - Record:
   - trainable parameter counts
   - validation/test accuracy

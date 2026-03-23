@@ -63,8 +63,8 @@ To evaluate an existing run:
 Once you move to a CUDA machine with model hub access, switch to the AG News configs:
 
 ```bash
-/opt/miniconda3/bin/python3 train.py --config configs/ag_news_full_ft.yaml
-/opt/miniconda3/bin/python3 train.py --config configs/ag_news_oft.yaml
+python train.py --config configs/ag_news_full_ft.yaml
+python train.py --config configs/ag_news_oft.yaml
 ```
 
 These configs assume the following defaults:
@@ -73,7 +73,13 @@ These configs assume the following defaults:
 - Backbone: `distilbert-base-uncased`
 - Task: 4-class sequence classification
 
-If a different encoder backbone is used later, update `model.architecture` and `oft.target_modules` in the config.
+Important:
+
+- The current code uses a single training process.
+- On an 8-GPU machine, run on one selected GPU first.
+- Use `CUDA_VISIBLE_DEVICES=<gpu_id>` to choose the GPU.
+
+See `docs/cuda_run_guide.md` for the exact CUDA workflow.
 
 ## Saved Artifacts
 
